@@ -66,8 +66,10 @@ $mwtExtensions = array(
 	'AbuseFilter' => new mwt\Extensions\AbuseFilter(),
 );
 
-// Custom configuration
-include_once( __DIR__ . '/Config.php' );
+if ( is_readable( __DIR__ . '/Config.php' ) ) {
+	// Custom configuration
+	include_once( __DIR__ . '/Config.php' );
+}
 
 // Remove extensions we don't have the git repo of
 foreach( $mwtExtensions as $name => $ext ) {
