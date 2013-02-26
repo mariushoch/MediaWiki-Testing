@@ -199,7 +199,7 @@ class Utilities {
 			$line .= ' -h ' . escapeshellarg( $mwtDBHost );
 		}
 		if ( $mwtDBPassword ) {
-			$line .= ' -p ' . escapeshellarg(  $mwtDBPassword );
+			$line .= ' -p' . escapeshellarg(  $mwtDBPassword );
 		}
 		return $line;
 	}
