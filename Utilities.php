@@ -34,7 +34,7 @@ class Utilities {
 	public static function syncAllGitRepos() {
 		global $mwtExtensions, $mwtDocRoot;
 		// Core
-		self::syncGitRepo( 'core', $mwtDocRoot );
+		self::syncCoreGit();
 		// Extensions
 		foreach( $mwtExtensions as $extension ) {
 			$extension->sync();
@@ -42,27 +42,29 @@ class Utilities {
 	}
 
 	/**
-	 * Sync the actual program files of a given git repo into $destination.
-	 * Uses rsync, omits .git for performance reasons.
+	 * Sync the program files for the MediaWiki core.
+	 * Uses rsync, omits hidden directories, like .git for performance reasons.
+	 * Furthermore this omits the /images directory
 	 *
 	 * @throws mwt\Exception
-	 *
-	 * @param $repo string Repo to synch (folder name)
-	 * @param $destinantion string Destinantion folder (will be created if doesn't exist)
 	 */
-	public static function syncGitRepo( $repo, $destinantion ) {
-		global $mwtGitPath;
+	public static function syncCoreGit() {
+		global $mwtGitPath, $mwtDocRoot;
 
-		if( !is_dir( $destinantion ) ) {
-			if( !mkdir( $destinantion, 0755, true) ) {
-				throw new Exception( "Can't create dir $destinantion" );
+		if( !is_dir( $mwtDocRoot ) ) {
+			if( !mkdir( $mwtDocRoot, 0755, true) ) {
+				throw new Exception( "Can't create dir $mwtDocRoot" );
 			}
 		}
 
-		$repo = $mwtGitPath . '/' . $repo . '/*';
-		$destinantion = $destinantion;
+		$repo = $mwtGitPath . '/core';
+		if( !is_dir( $repo ) ) {
+			throw new Exception( "The MediaWiki git repo couldn't be found at $repo" );
+		}
+
 		shell_exec(
-			'rsync -a --delete ' . $repo . ' ' . $destinantion
+			// rltgoD is --archive without -p (preserve permissions)
+			'rsync -rltgoD --delete ' . $repo . '/* ' . $mwtDocRoot . ' --exclude=images/*'
 		);
 	}
 
@@ -313,4 +315,3 @@ foreach( glob( __DIR__ . '/extensions/*.php' ) as $extensionClass ) {
 
 // Configuration
 require_once( __DIR__ . '/DefaultConfig.php' );
-require_once( __DIR__ . '/Config.php' );

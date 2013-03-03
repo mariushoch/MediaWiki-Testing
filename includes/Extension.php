@@ -130,10 +130,28 @@ abstract class extension {
 
 	/**
 	 * Sync the git repo of the current extension with the one served by the web server
+	 * Uses rsync omits .git for performance reasons.
+	 *
+	 * @throws mwt\Exception
 	 */
 	public function sync() {
-		global $mwtDocRoot;
-		Utilities::syncGitRepo( $this->name, $mwtDocRoot . '/extensions/' . $this->name );
+		global $mwtDocRoot, $mwtGitPath;
+
+		$destinantion = $mwtDocRoot . '/extensions/';
+
+		if( !is_dir( $destinantion ) ) {
+			throw new Exception( "The extensions dir doesn't seem to exist" );
+		}
+
+		if( !$this->exists() ) {
+			throw new Exception( "The git repo of $this->name couldn't be found" );
+		}
+
+		$repo = $mwtGitPath . '/' . $this->name;
+
+		shell_exec(
+			'rsync -a --delete ' . $repo . ' ' . $destinantion . ' --exclude=.git'
+		);
 	}
 
 	/**
