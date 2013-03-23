@@ -52,6 +52,15 @@ abstract class extension {
 	}
 
 	/**
+	 * Get the name of the extension
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return $this->name;
+	}
+
+	/**
 	 * Does the extension exist? (Do we have the git repo)
 	 *
 	 * @return bool
@@ -112,7 +121,7 @@ abstract class extension {
 	 *
 	 * @return string
 	 */
-	public function getLocalSettings() {
+	protected function getLocalSettings() {
 		global $mwtTemplatePath;
 
 		// Get template

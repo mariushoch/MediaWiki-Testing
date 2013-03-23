@@ -60,11 +60,14 @@ $mwtWikis = array(
 );
 
 // Known extensions
-$mwtExtensions = array(
-	'ParserFunctions' => new mwt\Extensions\ParserFunctions(),
-	'CentralAuth' => new mwt\Extensions\CentralAuth(),
-	'AbuseFilter' => new mwt\Extensions\AbuseFilter(),
-);
+$mwtExtensions = array();
+foreach( get_declared_classes() as $class ) {
+	if ( strpos( $class, 'mwt\extensions\\' ) !== 0 ) {
+		continue;
+	}
+	$extension = new $class();
+	$mwtExtensions[ $extension->getName() ] = $extension;
+}
 
 if ( is_readable( __DIR__ . '/Config.php' ) ) {
 	// Custom configuration
@@ -72,6 +75,7 @@ if ( is_readable( __DIR__ . '/Config.php' ) ) {
 }
 
 // Remove extensions we don't have the git repo of
+// Note: We can't do that before loading Config.php as we don't have the directory with the git repos before
 foreach( $mwtExtensions as $name => $ext ) {
 	if ( !$ext->exists() ) {
 		unset( $mwtExtensions[ $name ] );

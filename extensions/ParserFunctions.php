@@ -1,7 +1,6 @@
 <?php
-namespace mwt\Extensions;
-use mwt\extension;
-use mwt\Utilities;
+namespace mwt\extensions;
+use mwt\extension, mwt\Utilities;
 
 class ParserFunctions extends extension {
 	/**
