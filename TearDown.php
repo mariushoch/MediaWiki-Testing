@@ -35,6 +35,17 @@ $startTime = microtime( true );
 
 require_once( __DIR__ . '/includes/Main.php' );
 
+while( True ) {
+	$goOn = strtolower( readline( "Are you sure you want to destroy the whole wiki farm? [y/N]: " ) );
+	if ( $goOn === 'n' ) {
+		die( "User aborted\n" );
+	} elseif ( $goOn === 'y' ) {
+		break;
+	} else {
+		echo "Invalid input\n";
+	}	
+}
+
 // Drop all databases
 echo "Dropping all databases... ";
 Utilities::dropAllDatabases( true );
