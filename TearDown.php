@@ -33,7 +33,7 @@ if ( $argc > 1 && in_array( $argv[1], array( '--help', '-help', '-h' ) ) ) {
 
 $startTime = microtime( true );
 
-require_once( __DIR__ . '/Utilities.php' );
+require_once( __DIR__ . '/includes/Main.php' );
 
 // Drop all databases
 echo "Dropping all databases... ";

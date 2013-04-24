@@ -29,7 +29,7 @@ if ( $argc < 3 || in_array( $argv[1], array( '--help', '-help', '-h' ) ) ) {
 	die( $msg . "\n" );
 }
 
-require_once( __DIR__ . '/Utilities.php' );
+require_once( __DIR__ . '/includes/Main.php' );
 
 foreach( $mwtWikis as $wiki ) {
 	if ( $argv[1] === $wiki->getDBName() ) {

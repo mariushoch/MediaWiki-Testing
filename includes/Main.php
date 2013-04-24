@@ -304,14 +304,14 @@ class Utilities {
 }
 
 // Include all classes
-foreach( glob( __DIR__ . '/includes/*.php' ) as $extensionClass ) {
+foreach( glob( __DIR__ . '/../includes/*.php' ) as $extensionClass ) {
 	include_once( $extensionClass );
 }
 
 // Include all extension classes
-foreach( glob( __DIR__ . '/extensions/*.php' ) as $extensionClass ) {
+foreach( glob( __DIR__ . '/../extensions/*.php' ) as $extensionClass ) {
 	include_once( $extensionClass );
 }
 
 // Configuration
-require_once( __DIR__ . '/DefaultConfig.php' );
+require_once( __DIR__ . '/../DefaultConfig.php' );

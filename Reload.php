@@ -35,7 +35,7 @@ if ( $argc < 2 || in_array( $argv[1], array( '--help', '-help', '-h' ) ) ) {
 	die( $msg . "\n" );
 }
 
-require_once( __DIR__ . '/Utilities.php' );
+require_once( __DIR__ . '/includes/Main.php' );
 
 if ( $argv[1] === 'LocalSettings' ) {
 
