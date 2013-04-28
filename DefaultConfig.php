@@ -31,6 +31,9 @@ $mwtDBPassword = '';
 // Path to the folder in which the wikis should be stored in
 $mwtDocRoot = '/var/www/html/wikis';
 
+// Path to MediaWiki-Testing
+$mwtPath = __DIR__;
+
 // Like $wgServer
 $mwtServer = 'http://localhost';
 
@@ -38,6 +41,7 @@ $mwtServer = 'http://localhost';
 $mwtWikiPath = '/wikis';
 
 // Wikis to be created
+// @FIXME: Right now path needs to be === dbname
 $mwtWikis = array(
 	'meta' => new mwt\instance(
 		'metawiki',
@@ -55,6 +59,12 @@ $mwtWikis = array(
 		'hewiki',
 		array(
 			'path' => 'hewiki'
+		)
+	),
+	'repo' => new mwt\instance(
+		'repowiki',
+		array(
+			'path' => 'repowiki'
 		)
 	),
 );

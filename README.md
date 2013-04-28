@@ -1,7 +1,7 @@
 MediaWiki-Testing
 =================
 
-MediaWiki testing environment with support for the CentralAuth and AbuseFilter extensions.
+MediaWiki testing environment with support for the CentralAuth, AbuseFilter and Wikibase extensions.
 Suitable for advanced developers only!
 
 This can build a variable number of MediaWiki wikis on one host with various extensions.
@@ -25,7 +25,7 @@ You can either place the template folder into the root directory of MediaWiki-Te
 * Take a look at DefaultConfig.php and set all variables you want/ need to alter in your Config.php
 You'll almost certainly need to alter $mwtGitPath and probably many of the database and web server settings.
 
-* Have a look at the templates. Probably you need to alter the LocalSettings.php one
+* Have a look at the templates. Maybe you need to alter the LocalSettings.php one
 
 * Run Create.php to create your new wikis
 

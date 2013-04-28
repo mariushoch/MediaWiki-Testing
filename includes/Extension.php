@@ -39,7 +39,7 @@ abstract class extension {
 	/**
 	 * Constructor
 	 *
-	 * @param $name string Extension name (has to match the name of the folder containing the git repo)
+	 * @param $name string Extension name
 	 * @param $wikis array Array with instance objects of wikis
 	 * 		this extension should be enabled on. Defaults to all wikis.
 	 */
@@ -47,7 +47,6 @@ abstract class extension {
 		global $mwtWikis;
 
 		$this->name = $name;
-
 		$this->enabledWikis = $wikis !== null ? $wikis : $mwtWikis;
 	}
 
@@ -61,21 +60,31 @@ abstract class extension {
 	}
 
 	/**
-	 * Does the extension exist? (Do we have the git repo)
+	 * Does the extension exist and is installable?
+	 * (Do we have the git repo and the dependent ones)
 	 *
 	 * @return bool
 	 */
 	public function exists() {
-		global $mwtGitPath;
+		global $mwtGitPath, $mwtExtensions;
 
-		if( is_dir( $mwtGitPath . '/' . $this->name ) ) {
+		$deps = $this->getDependencies();
+		if ( count( $deps ) ) {
+			foreach( $deps as $neededExt ) {
+				if ( !$mwtExtensions[ $neededExt ] || !$mwtExtensions[ $neededExt ]->exists() ) {
+					return false;
+				}
+			}
+		}
+
+		if( is_dir( $mwtGitPath . '/' . $this->getGitFolder() ) ) {
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Return an aray with extension objects on which this extension is enabled
+	 * Return an array with wiki instance objects on which this extension is enabled
 	 *
 	 * @return array
 	 */
@@ -89,6 +98,18 @@ abstract class extension {
 	 * @throws mwt\Exception
 	 */
 	public function install() {
+		global $mwtExtensions;
+
+		$deps = $this->getDependencies();
+		if ( count( $deps ) ) {
+			foreach( $deps as $neededExt ) {
+				if ( !$mwtExtensions[ $neededExt ] ) {
+					throw new Exception( "Unknown dependency for $this->name: $neededExt" );
+				}
+				$mwtExtensions[ $neededExt ]->install();
+			}
+		}
+
 		$this->sync();
 		$this->writeLocalSettings();
 
@@ -109,7 +130,7 @@ abstract class extension {
 	public function writeLocalSettings() {
 		global $mwtDocRoot;
 
-		if ( !file_put_contents( $mwtDocRoot . '/LocalSettings.php', $this->createLocalSettings(), FILE_APPEND ) ) {
+		if ( !@file_put_contents( $mwtDocRoot . '/LocalSettings.php', $this->createLocalSettings(), FILE_APPEND ) ) {
 			throw new Exception( "Couldn't write LocalSettings.php" );
 		}
 	}
@@ -125,7 +146,7 @@ abstract class extension {
 		global $mwtTemplatePath;
 
 		// Get template
-		$localSettings = file_get_contents( $mwtTemplatePath . '/' . $this->getSettingsTemplate() );
+		$localSettings = @file_get_contents( $mwtTemplatePath . '/' . $this->getSettingsTemplate() );
 		if ( $localSettings === false ) {
 			throw new Exception( "Couldn't read template: " . $mwtTemplatePath . '/' . $this->getSettingsTemplate() );
 		}
@@ -156,7 +177,7 @@ abstract class extension {
 			throw new Exception( "The git repo of $this->name couldn't be found" );
 		}
 
-		$repo = $mwtGitPath . '/' . $this->name;
+		$repo = $mwtGitPath . '/' . $this->getGitFolder();
 
 		shell_exec(
 			'rsync -a --delete ' . $repo . ' ' . $destinantion . ' --exclude=.git'
@@ -181,7 +202,16 @@ abstract class extension {
 
 		$php .= "\n}\n";
 
-		return $php;
+		return Utilities::settingTemplateVarSubstitution( $php );
+	}
+
+	/**
+	 * Get the folder name (containing the git repo)
+	 *
+	 * @return array
+	 */
+	public function getGitFolder() {
+		return $this->getName();
 	}
 
 	/**
@@ -197,7 +227,16 @@ abstract class extension {
 	}
 
 	/**
-	 * Remove the extension
+	 * Get the names of extensions this extension relies on
+	 *
+	 * @return array
+	 */
+	public function getDependencies() {
+		return array();
+	}
+
+	/**
+	 * Remove the extension (called from TearDown.php)
 	 *
 	 * @throws mwt\Exception
 	 */

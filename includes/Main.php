@@ -172,6 +172,7 @@ class Utilities {
 	 */
 	public static function installAllExtensions() {
 		global $mwtExtensions;
+
 		foreach( $mwtExtensions as $ext ) {
 			$ext->install();
 		}
@@ -272,7 +273,7 @@ class Utilities {
 		global $mwtTemplatePath, $mwtLocalSettingsTemplate, $mwtServer;
 
 		// Get template
-		$localSettings = file_get_contents( $mwtTemplatePath . '/' . $mwtLocalSettingsTemplate );
+		$localSettings = @file_get_contents( $mwtTemplatePath . '/' . $mwtLocalSettingsTemplate );
 		if ( $localSettings === false ) {
 			throw new Exception( "Couldn't read LocalSettings.php template: " . $mwtTemplatePath . '/' . $mwtLocalSettingsTemplate );
 		}
@@ -281,7 +282,7 @@ class Utilities {
 		$localSettings = substr( $localSettings, strpos( $localSettings, "\n" ) + 1 );
 		$localSettings = "<?php\n" . self::getDatabaseSwitch() . $localSettings;
 
-		return $localSettings;
+		return self::settingTemplateVarSubstitution( $localSettings );
 	}
 
 	/**
@@ -300,6 +301,23 @@ class Utilities {
 			$htaccess .= "\n" . $wiki->getRewriteRule();
 		}
 		return $htaccess;
+	}
+
+	/**
+	 * Does MediaWiki-Testing variable substitution on settings templates
+	 * Syntax: {{mwtServer}}
+	 *
+	 * @param $settings string Content of the LocalSettings template
+	 *
+	 * @return string
+	 */
+	public static function settingTemplateVarSubstitution( $settings ) {
+		global $mwtDocRoot, $mwtServer, $mwtWikiPath, $mwtPath;
+
+		$search = array( '{{mwtDocRoot}}', '{{mwtServer}}', '{{mwtWikiPath}}', '{{mwtPath}}' );
+		$replace = array( $mwtDocRoot, $mwtServer, $mwtWikiPath, $mwtPath );
+
+		return str_replace( $search, $replace, $settings );
 	}
 }
 

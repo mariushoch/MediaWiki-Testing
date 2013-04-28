@@ -53,7 +53,7 @@ if ( $argv[1] === 'LocalSettings' ) {
 	echo "done\n";
 
 } else {
-	die( "Can't reload $argv[1] (unknown action)." );
+	die( "Can't reload $argv[1] (unknown action).\n" );
 }
 
 echo "\n\n" . round( microtime( true ) - $startTime, 2 ) . " seconds needed\n";
