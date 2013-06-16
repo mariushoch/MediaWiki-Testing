@@ -44,6 +44,15 @@ class WikibaseClient extends extension {
 	}
 
 	/**
+	 * Get the path of the entry point for the current extension relative to $mwtGitPath
+	 * 
+	 * @return string
+	 */
+	public function getEntryPoint() {
+		return $this->getGitFolder() . '/client/WikibaseClient.php';
+	}
+
+	/**
 	 * Get the names of extensions this extension relies on
 	 *
 	 * @return array

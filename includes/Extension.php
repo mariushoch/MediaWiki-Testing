@@ -143,17 +143,29 @@ abstract class extension {
 	 * @return string
 	 */
 	protected function getLocalSettings() {
-		global $mwtTemplatePath;
+		global $mwtTemplatePath, $mwtGitPath;
+		$localSettings = '';
 
-		// Get template
-		$localSettings = @file_get_contents( $mwtTemplatePath . '/' . $this->getSettingsTemplate() );
-		if ( $localSettings === false ) {
-			throw new Exception( "Couldn't read template: " . $mwtTemplatePath . '/' . $this->getSettingsTemplate() );
+		if ( is_readable( $mwtGitPath . '/' . $this->getEntryPoint() ) ) {
+			// Just try to include the default entry point if we can find one
+			$localSettings = 'require_once( "$IP/extensions/' . $this->getEntryPoint() . '" );';
 		}
 
-		$localSettings = '// Settings for Extension: ' . $this->name . ":\n" .
-			// Get rid of leading <?php as that can cause trouble
-			substr( $localSettings, strpos( $localSettings, "\n" ) + 1 );
+		// Get template
+		$localSettingsTemplate = @file_get_contents( $mwtTemplatePath . '/' . $this->getSettingsTemplate() );
+
+		if ( $localSettingsTemplate === false && $localSettings === '' ) {
+			throw new Exception( "Couldn't find default or custom entry point for " . $this->getName() );
+		} elseif ( $localSettingsTemplate ) {
+			if ( strpos( $localSettingsTemplate, '<?php' ) !== false ) {
+				// Get rid of leading <?php as that can cause trouble
+				$localSettingsTemplate = substr( $localSettingsTemplate, strpos( $localSettingsTemplate, "\n" ) + 1 );
+			}
+
+			$localSettings .= $localSettingsTemplate;
+		}
+
+		$localSettings = '// Settings for Extension: ' . $this->getName() . ":\n" . $localSettings;
 
 		return $localSettings;
 	}
@@ -208,7 +220,7 @@ abstract class extension {
 	/**
 	 * Get the folder name (containing the git repo)
 	 *
-	 * @return array
+	 * @return string
 	 */
 	public function getGitFolder() {
 		return $this->getName();
@@ -233,6 +245,15 @@ abstract class extension {
 	 */
 	public function getDependencies() {
 		return array();
+	}
+
+	/**
+	 * Get the path of the entry point for the current extension relative to $mwtGitPath
+	 * 
+	 * @return string
+	 */
+	public function getEntryPoint() {
+		return $this->getGitFolder() . '/' . $this->getName() . '.php';
 	}
 
 	/**

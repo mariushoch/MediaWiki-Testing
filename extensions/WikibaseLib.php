@@ -32,6 +32,15 @@ class WikibaseLib extends extension {
 	}
 
 	/**
+	 * Get the path of the entry point for the current extension relative to $mwtGitPath
+	 *
+	 * @return string
+	 */
+	public function getEntryPoint() {
+		return $this->getGitFolder() . '/lib/WikibaseLib.php';
+	}
+
+	/**
 	 * Installs the extension
 	 */
 	public function install() {
