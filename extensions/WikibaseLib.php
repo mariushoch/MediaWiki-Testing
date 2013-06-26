@@ -10,7 +10,19 @@ class WikibaseLib extends extension {
 	 * 		this extension should be enabled on. Defaults to all wikis.
 	 */
 	public function __construct( $wikis = null ) {
-		parent::__construct( 'WikibaseLib', $wikis );
+		global $mwtWikis;
+		$wikis = $wikis !== null ? $wikis : $mwtWikis;
+
+		$runWikis = array();
+		foreach ( $wikis as $name => $wiki ) {
+			if ( $name === 'meta' ) {
+				// Don't run us on meta!
+				continue;
+			}
+			$runWikis[ $name ] = $wiki;			
+		}
+
+		parent::__construct( 'WikibaseLib', $runWikis );
 	}
 
 	/**
