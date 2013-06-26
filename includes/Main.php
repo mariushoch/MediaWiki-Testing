@@ -64,7 +64,7 @@ class Utilities {
 
 		shell_exec(
 			// rltgoD is --archive without -p (preserve permissions)
-			'rsync -rltgoD --delete ' . $repo . '/* ' . $mwtDocRoot . ' --exclude=images/*'
+			'rsync -rltgoD --delete ' . $repo . '/* ' . $mwtDocRoot . ' --exclude=/images/*'
 		);
 	}
 
