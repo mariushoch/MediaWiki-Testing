@@ -71,7 +71,7 @@ abstract class extension {
 		$deps = $this->getDependencies();
 		if ( count( $deps ) ) {
 			foreach( $deps as $neededExt ) {
-				if ( !$mwtExtensions[ $neededExt ] || !$mwtExtensions[ $neededExt ]->exists() ) {
+				if ( !isset( $mwtExtensions[ $neededExt ] ) || !$mwtExtensions[ $neededExt ]->exists() ) {
 					return false;
 				}
 			}

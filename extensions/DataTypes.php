@@ -2,7 +2,7 @@
 namespace mwt\extensions;
 use mwt\extension, mwt\Utilities;
 
-class Ask extends extension {
+class DataTypes extends extension {
 	/**
 	 * Constructor
 	 *
@@ -10,7 +10,7 @@ class Ask extends extension {
 	 * 		this extension should be enabled on. Defaults to all wikis.
 	 */
 	public function __construct( $wikis = null ) {
-		parent::__construct( 'Ask', $wikis );
+		parent::__construct( 'DataTypes', $wikis );
 	}
 
 	/**
@@ -19,6 +19,6 @@ class Ask extends extension {
 	 * @return string
 	 */
 	public function getSettingsTemplate() {
-		return 'Ask.php';
+		return 'DataTypes.php';
 	}
 }

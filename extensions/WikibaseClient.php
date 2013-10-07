@@ -59,7 +59,6 @@ class WikibaseClient extends extension {
 	 */
 	public function getDependencies() {
 		return array(
-			'Ask',
 			'Diff',
 			'DataValues',
 			'UniversalLanguageSelector',

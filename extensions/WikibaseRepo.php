@@ -37,9 +37,9 @@ class WikibaseRepo extends extension {
 	 */
 	public function getDependencies() {
 		return array(
-			'Ask',
 			'Diff',
 			'DataValues',
+			'DataTypes',
 			'UniversalLanguageSelector',
 			'WikibaseLib'
 		);
