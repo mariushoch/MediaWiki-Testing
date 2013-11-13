@@ -34,6 +34,7 @@ require_once( __DIR__ . '/includes/Main.php' );
 foreach( $mwtWikis as $wiki ) {
 	if ( $argv[1] === $wiki->getDBName() ) {
 		$_SERVER['REQUEST_URI'] = $mwtWikiPath . '/' . $wiki->getPath() . '/foo';
+		putenv( "MW_INSTALL_PATH=$mwtDocRoot" );
 	}
 }
 if ( !isset( $_SERVER['REQUEST_URI'] ) || !$_SERVER['REQUEST_URI'] ) {
