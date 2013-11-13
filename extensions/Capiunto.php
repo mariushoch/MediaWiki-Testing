@@ -2,7 +2,7 @@
 namespace mwt\extensions;
 use mwt\extension, mwt\Utilities;
 
-class Scribunto extends extension {
+class Capiunto extends extension {
 	/**
 	 * Constructor
 	 *
